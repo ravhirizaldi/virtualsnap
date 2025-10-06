@@ -1,149 +1,133 @@
-# VirtualSnap - AI Photo Generator
+# VirtualSnap – AI Photo Generator
 
-A Vue 3 application that uses Google AI Gemini to combine multiple images and create photorealistic scenes. Choose from various scenarios like car selfies, restaurant dates, beach vacations, and more. Built with modern Vue 3, latest ESLint configuration, and Prettier formatting.
+Create photorealistic scenes by blending two selfies into curated scenarios (car selfie, coffee shop, beach trip, and more). VirtualSnap is built with Vue 3, Vite, Tailwind, and Google Gemini.
 
-🚀 **[Live Demo](https://virtualsnap-rvhrzld.vercel.app/)** - Try it now!
+🚀 **[Live Demo](https://virtualsnap-rvhrzld.vercel.app/)**
 
-## Prerequisites
+---
 
-- **[Node.js](https://nodejs.org)** (version 18 or later)
-- **Google AI (Gemini) API Key** (get yours [here](https://makersuite.google.com/app/apikey))
+## Quick start
 
-## Setup Instructions
-
-1. **Clone or download** this project to your local machine.
-2. **Open a terminal** in this project directory.
-3. **Install dependencies**:
+1. **Install dependencies**
    ```bash
    npm install
    ```
-4. **API Key Setup** - You have two options:
-   
-   **Option A: Environment Variable (recommended for development)**
-   Create a `.env.local` file in the root directory and add your Gemini API key:
+2. **Provide a Gemini API key**
+   ```bash
+   cp .env.example .env.local
+   echo VITE_GEMINI_API_KEY=your_key_here >> .env.local
    ```
-   VITE_GEMINI_API_KEY=your_actual_api_key_here
-   ```
-
-   **Option B: In-App Setup (user-friendly)**
-   If no API key is found in the environment, the app will show a popup when first opened, allowing users to enter their personal API key. The key is stored locally in the browser and never shared.
-
-   > **⚠️ Important**: Keep your API key secure and never commit it to version control.
-
-5. **Start the development server**:
+   Or paste it in the in-app modal at first launch (stored in localStorage).
+3. **Run locally**
    ```bash
    npm run dev
    ```
-6. **Open your browser** and go to `http://localhost:3000`
+   Visit http://localhost:3000
 
-## Development Commands
+### Common scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint with auto-fix
-- `npm run format` - Format code with Prettier
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start Vite dev server |
+| `npm run build` | Production build (optimized terser config) |
+| `npm run preview` | Preview the production bundle |
+| `npm run lint` | ESLint (flat config) |
+| `npm run format` | Prettier |
+| `npm run test:run` | Vitest + Vue Test Utils suite |
 
-## Usage
+---
 
-1. **API Key Setup**: If no API key is configured, a popup will appear asking for your personal Gemini API key
-2. **Choose a scenario** from the available options (Car Selfie, Restaurant Date, Beach Vacation, etc.)
-3. **Upload two images** using the file inputs for "First Person" and "Second Person"
-4. **Click the generate button** to create a combined image in your chosen scenario
-5. **Download your generated image** when the AI completes processing
+## Using the app
 
-## API Key Management
+1. Launch VirtualSnap and enter a Gemini API key if prompted.
+2. Pick a scenario (grid or dropdown view).
+3. Upload one photo per person and hit **Generate**.
+4. Review the AI suggestions, then download the blended result.
 
-- **First Time Setup**: Enter your Gemini API key when prompted - it's stored securely in your browser
-- **Change API Key**: Click the key icon in the header to update or change your API key
-- **Clear API Key**: Use the "Clear Key" button in the settings modal to remove your stored key
-- **Privacy**: Your API key is stored locally in your browser and never sent to any external servers except Google's Gemini API
+**API key tips**
+- Update or clear the stored key via the header key icon.
+- Keys live only in the browser (unless supplied via env vars).
 
-## Available Scenarios
+---
 
-- 🚗 **Car Selfie** - Create a realistic car selfie with both people
-- 🍽️ **Restaurant Date** - Generate an elegant dinner scene
-- 🏖️ **Beach Vacation** - Create a fun beach vacation photo
-- ☕ **Coffee Shop Meeting** - Generate a casual coffee shop encounter
-- 💒 **Wedding Photo** - Create an elegant formal event photo
-- 🥾 **Hiking Adventure** - Generate an outdoor hiking scene
+## Add or tweak scenarios
 
-## Features
+AI prompts live in `src/prompts/scenarios.json`. Add a new entry like:
 
-- ✨ Built with Vue 3 Composition API
-- 🔧 Latest ESLint 9.x configuration with flat config
-- 💅 Prettier for consistent code formatting
-- 🖼️ Real-time image preview and analysis
-- 📱 Responsive design with Tailwind CSS
-- 🎨 Modern Vue 3 reactive components
-- 🔧 Developer mode for custom prompts
-- 📥 Easy image download functionality
-- � In-app API key management (store personal keys locally)
-- ⚙️ Settings panel for API key configuration
-- �🚀 Fast development with Vite
+```json
+{
+  "id": "concert_performance",
+  "name": "Concert Performance",
+  "description": "Create an exciting concert stage performance",
+  "icon": "🎤",
+  "analysisPrompt": "Describe the outfits only…",
+  "mainPrompt": "Create one photorealistic image… {analysis1} … {analysis2} …"
+}
+```
 
-## Technologies Used
+Guidelines:
+- `id` must be unique (snake_case).
+- Keep `analysisPrompt` short and focused on clothing/accessories.
+- In `mainPrompt`, reuse `{analysis1}` and `{analysis2}` placeholders.
+- The UI updates automatically—no code changes required.
 
-- **Vue 3** - Progressive JavaScript framework
-- **Vite** - Next generation frontend tooling
-- **Google AI Gemini** - AI-powered image generation
-- **Tailwind CSS** - Utility-first CSS framework
-- **ESLint 9.x** - Latest linting with flat config
-- **Prettier** - Code formatting
-- **JavaScript (ES2022+)** - Modern JavaScript features
+---
 
-## Vercel Deployment
+## Project layout
 
-This project is fully configured for deployment on Vercel. Follow these steps:
+```
+src/
+├─ components/       # UI building blocks (modals, uploaders, etc.)
+├─ composables/      # Reusable Vue composition logic (toasts, file uploads)
+├─ services/         # Google Gemini integration (`aiService.js`)
+├─ prompts/          # Scenario definitions (`scenarios.json`)
+├─ views/            # Page-level components
+└─ main.js / App.vue # App entry point
+```
 
-### Quick Deploy
+The architecture favours small, testable components. Vitest specs live in `src/components/__tests__/`.
 
-1. **Fork this repository** or upload it to your GitHub account
-2. **Connect to Vercel**:
-   - Go to [vercel.com](https://vercel.com)
-   - Sign in with your GitHub account
-   - Click "New Project" and import your repository
+---
 
-3. **Configure Environment Variables**:
-   - In your Vercel project dashboard, go to Settings → Environment Variables
-   - Add the following variable:
-     ```
-     Name: VITE_GEMINI_API_KEY
-     Value: your_actual_gemini_api_key_here
-     ```
+## Deployment
 
-4. **Deploy**: Vercel will automatically build and deploy your project!
+### Vercel
 
-### Manual Configuration
+1. Push to GitHub and import the repo in Vercel.
+2. Set `VITE_GEMINI_API_KEY` in **Settings → Environment Variables**.
+3. Deploy (Vercel uses `npm run build`, `dist`, Node 18+).
 
-The project includes these Vercel-specific files:
-- `vercel.json` - Vercel configuration with SPA routing
-- `.vercelignore` - Files to exclude from deployment
-- Updated `vite.config.js` with optimized build settings
+`vercel.json` already configures SPA routing and caching.
 
-### Environment Variables for Vercel
+### Docker
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `VITE_GEMINI_API_KEY` | Your Google Gemini API key | Yes |
-| `NODE_ENV` | Set to "production" for production builds | Optional |
+Production image uses multi-stage builds with nginx:
 
-### Build Configuration
+```bash
+# Build & run
+docker-compose up --build
 
-The project uses:
-- **Build Command**: `npm run build`
-- **Output Directory**: `dist`
-- **Framework**: Vite
-- **Node.js Version**: 18.x or later
+# Development profile (Vite + hot reload)
+docker-compose --profile development up --build
 
-### Features Optimized for Vercel
+# With Traefik proxy
+docker-compose --profile production up -d
+```
 
-- ✅ SPA routing with fallback to index.html
-- ✅ Optimized asset caching headers
-- ✅ Environment variable support
-- ✅ Automatic dependency detection
-- ✅ Edge-optimized build configuration
+Expose your API key via `.env` (see `.env.example`).
+
+---
+
+## Tech highlights
+
+- Vue 3 + Composition API
+- Tailwind CSS for responsive layouts
+- Google Gemini SDK integration with local key management
+- Vite build pipeline with aggressive terser optimizations
+- Fully tested components using Vitest + Vue Test Utils
+
+---
 
 ## License
 
-This project is licensed under the Apache-2.0 License.
+Apache-2.0

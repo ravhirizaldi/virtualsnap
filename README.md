@@ -1,5 +1,9 @@
 # VirtualSnap – AI Photo Generator
 
+[![Node.js CI](https://github.com/ravhirizaldi/virtualsnap/actions/workflows/node.js.yml/badge.svg)](https://github.com/ravhirizaldi/virtualsnap/actions/workflows/node.js.yml)
+[![Vercel](https://img.shields.io/badge/Vercel-Live-black?logo=vercel)](https://virtualsnap-rvhrzld.vercel.app/)
+[![codecov](https://codecov.io/gh/ravhirizaldi/virtualsnap/branch/main/graph/badge.svg)](https://codecov.io/gh/ravhirizaldi/virtualsnap)
+
 Create photorealistic scenes by blending two selfies into curated scenarios (car selfie, coffee shop, beach trip, and more). VirtualSnap is built with Vue 3, Vite, Tailwind, and Google Gemini.
 
 🚀 **[Live Demo](https://virtualsnap-rvhrzld.vercel.app/)**

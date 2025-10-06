@@ -1,0 +1,5 @@
+{
+  "name": "VirtualSnap",
+  "description": "VirtualSnap generates photorealistic car selfies from individual photos. The app analyzes each uploaded model, preserves their unique features and outfits, and merges them seamlessly into a natural car interior scene with consistent lighting and perspective.",
+  "requestFramePermissions": []
+}

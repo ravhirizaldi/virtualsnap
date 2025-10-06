@@ -1,0 +1,94 @@
+version: '3.8'
+
+services:
+  virtualsnap-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+      args:
+        - NODE_ENV=production
+    image: virtualsnap-app:latest
+    container_name: virtualsnap-app
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - NODE_ENV=production
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - virtualsnap-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.virtualsnap.rule=Host(`localhost`)"
+      - "traefik.http.services.virtualsnap.loadbalancer.server.port=80"
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+          cpus: '0.5'
+        reservations:
+          memory: 128M
+          cpus: '0.25'
+
+  # Optional: Add a reverse proxy for production
+  traefik:
+    image: traefik:v3.0
+    container_name: virtualsnap-traefik
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8088:8080"  # Traefik dashboard
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.myresolver.acme.email=your-email@example.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+    networks:
+      - virtualsnap-network
+    profiles:
+      - production
+
+  # Development service
+  virtualsnap-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: virtualsnap-dev:latest
+    container_name: virtualsnap-dev
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - virtualsnap-network
+    profiles:
+      - development
+
+networks:
+  virtualsnap-network:
+    driver: bridge
+
+volumes:
+  letsencrypt:

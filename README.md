@@ -2,6 +2,8 @@
 
 A Vue 3 application that uses Google AI Gemini to combine multiple images and create photorealistic scenes. Choose from various scenarios like car selfies, restaurant dates, beach vacations, and more. Built with modern Vue 3, latest ESLint configuration, and Prettier formatting.
 
+🚀 **[Live Demo](https://virtualsnap-rvhrzld.vercel.app/)** - Try it now!
+
 ## Prerequisites
 
 - **[Node.js](https://nodejs.org)** (version 18 or later)

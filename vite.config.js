@@ -26,11 +26,11 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             vendor: ['vue'],
-            ai: ['@google/genai']
-          }
-        }
-      }
+            ai: ['@google/genai'],
+          },
+        },
+      },
     },
-    base: '/'
+    base: '/',
   };
 });

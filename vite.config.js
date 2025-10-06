@@ -1,6 +1,7 @@
 import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import vue from '@vitejs/plugin-vue';
+import { configDefaults } from 'vitest/config';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
@@ -42,5 +43,18 @@ export default defineConfig(({ mode }) => {
       },
     },
     base: '/',
+    test: {
+      globals: true,
+      environment: 'jsdom',
+      setupFiles: 'tests/setup.js',
+      css: true,
+      coverage: {
+        reporter: ['text', 'lcov'],
+        exclude: [...configDefaults.coverage.exclude, 'src/prompts/**'],
+      },
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+      },
+    },
   };
 });

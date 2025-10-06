@@ -20,7 +20,11 @@
             class="disclaimer-tooltip absolute right-0 top-10 w-64 sm:w-80 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg shadow-xl opacity-0 invisible transition-all duration-200 z-20"
           >
             <div class="font-semibold mb-2 flex items-center text-amber-700">
-              <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 24 24">
+              <svg
+                class="w-4 h-4 mr-1.5"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
                 />
@@ -101,7 +105,12 @@
           class="px-4 sm:px-6 py-3 sm:py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-red-300 text-sm sm:text-base"
           @click="resetAll"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            class="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"

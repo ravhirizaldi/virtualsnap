@@ -66,6 +66,9 @@
       @save="handleApiKeySave"
       @clear="handleApiKeyClear"
     />
+
+    <!-- Vercel Speed Insights -->
+    <SpeedInsights />
   </div>
 </template>
 
@@ -78,6 +81,7 @@
   import ApiKeyModal from './components/ApiKeyModal.vue';
   import { useToast } from './composables/useToast.js';
   import { useApiKey } from './composables/useApiKey.js';
+  import { SpeedInsights } from '@vercel/speed-insights/vue';
 
   export default {
     name: 'App',
@@ -87,6 +91,7 @@
       ResultModal,
       ToastContainer,
       ApiKeyModal,
+      SpeedInsights,
     },
     setup() {
       const { toasts, showToast, removeToast } = useToast();

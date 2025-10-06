@@ -24,10 +24,18 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       assetsDir: 'assets',
       minify: 'terser',
+      sourcemap: false,
       terserOptions: {
         compress: {
           drop_console: mode === 'production',
           drop_debugger: mode === 'production',
+          passes: 3,
+          pure_funcs: ['console.info', 'console.debug', 'console.trace'],
+          reduce_funcs: true,
+          ecma: 2020,
+        },
+        mangle: {
+          toplevel: true,
         },
         format: {
           comments: false,

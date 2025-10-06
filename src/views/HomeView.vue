@@ -20,11 +20,7 @@
             class="disclaimer-tooltip absolute right-0 top-10 w-64 sm:w-80 p-3 bg-amber-50 border border-amber-200 text-amber-800 text-xs rounded-lg shadow-xl opacity-0 invisible transition-all duration-200 z-20"
           >
             <div class="font-semibold mb-2 flex items-center text-amber-700">
-              <svg
-                class="w-4 h-4 mr-1.5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 24 24">
                 <path
                   d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
                 />
@@ -46,11 +42,7 @@
       <!-- Intro Text -->
       <div class="text-center">
         <div class="flex justify-center mb-4">
-          <div
-            :class="{ 'animate-pulse': tapCount > 0 && tapCount < 3 }"
-            class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg cursor-pointer transition-all duration-200 hover:scale-105 active:scale-95"
-            @click="handleSecretTap"
-          >
+          <div class="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl shadow-lg">
             <CameraIcon class="w-8 h-8 text-white" />
           </div>
         </div>
@@ -65,10 +57,7 @@
       </div>
 
       <!-- Scenario Selector -->
-      <ScenarioSelector
-        v-model="selectedScenario"
-        :secret-unlocked="secretUnlocked"
-      />
+      <ScenarioSelector v-model="selectedScenario" />
 
       <!-- Upload boxes -->
       <div class="flex flex-col min-[500px]:flex-row gap-4 sm:gap-5 lg:gap-6">
@@ -112,12 +101,7 @@
           class="px-4 sm:px-6 py-3 sm:py-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed focus:outline-none focus:ring-4 focus:ring-red-300 text-sm sm:text-base"
           @click="resetAll"
         >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -155,11 +139,6 @@
       const analysis2 = ref('');
       const isLoading = ref(false);
       const selectedScenario = ref('car_selfie');
-
-      // Secret tap functionality
-      const tapCount = ref(0);
-      const secretUnlocked = ref(false);
-      let tapTimeout = null;
 
       const canGenerate = computed(() => preview1.value && preview2.value);
       const canReset = computed(() => (preview1.value || preview2.value) && !isLoading.value);
@@ -244,27 +223,6 @@
         if (fileInput2) fileInput2.value = '';
       };
 
-      const handleSecretTap = () => {
-        tapCount.value++;
-
-        // Clear any existing timeout
-        if (tapTimeout) {
-          clearTimeout(tapTimeout);
-        }
-
-        // If user reaches 3 taps, unlock the secret
-        if (tapCount.value >= 3) {
-          secretUnlocked.value = true;
-          emit('toast', '🔓 Secret scenario unlocked!', 'success');
-          tapCount.value = 0; // Reset counter
-        } else {
-          // Reset tap count after 2 seconds of inactivity
-          tapTimeout = setTimeout(() => {
-            tapCount.value = 0;
-          }, 2000);
-        }
-      };
-
       return {
         preview1,
         preview2,
@@ -278,9 +236,6 @@
         handleImageUpload: handleUpload,
         generateImage,
         resetAll,
-        tapCount,
-        secretUnlocked,
-        handleSecretTap,
       };
     },
   };

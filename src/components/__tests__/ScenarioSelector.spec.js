@@ -16,12 +16,6 @@ const baseScenarios = [
     description: 'Night skyline glow.',
     icon: '🌃',
   },
-  {
-    id: 'latex_bedroom',
-    name: 'Hidden Scenario',
-    description: 'Secret content.',
-    icon: '🛏️',
-  },
 ];
 
 const extendedScenarios = [
@@ -48,17 +42,17 @@ describe('ScenarioSelector', () => {
     mockGetScenarios.mockReturnValue(baseScenarios);
   });
 
-  it('filters locked scenarios and emits updates in grid view', async () => {
+  it('renders scenarios and emits updates in grid view', async () => {
     const wrapper = mount(ScenarioSelector, {
       props: {
-        secretUnlocked: false,
         modelValue: 'car_selfie',
       },
     });
 
     await nextTick();
 
-    expect(wrapper.text()).not.toContain('Hidden Scenario');
+    expect(wrapper.text()).toContain('Car Selfie');
+    expect(wrapper.text()).toContain('City Lights');
 
     const cards = wrapper.findAll('.grid > div');
     expect(cards.length).toBe(2);
@@ -77,7 +71,6 @@ describe('ScenarioSelector', () => {
 
     const wrapper = mount(ScenarioSelector, {
       props: {
-        secretUnlocked: true,
         modelValue: 'car_selfie',
       },
     });

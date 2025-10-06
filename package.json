@@ -18,7 +18,8 @@
     "@heroicons/vue": "^2.2.0",
     "@vercel/speed-insights": "^1.2.0",
     "flowbite": "^3.1.2",
-    "vue": "^3.4.21"
+    "vue": "^3.4.21",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

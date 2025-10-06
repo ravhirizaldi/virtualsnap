@@ -61,22 +61,131 @@ class AIService {
   }
 
   async fileToGenerativePart(file) {
+    try {
+      const processedBlob = await this.preprocessImage(file);
+      const dataUrl = await this.blobToDataUrl(processedBlob);
+      const base64Data = typeof dataUrl === 'string' ? dataUrl.split(',')[1] : null;
+
+      if (!base64Data) {
+        throw new Error('Failed to encode image');
+      }
+
+      const mimeType = processedBlob?.type || this.getOutputMimeType(file.type);
+
+      return {
+        inlineData: {
+          data: base64Data,
+          mimeType,
+        },
+      };
+    } catch (error) {
+      console.error('Image preprocessing failed:', error);
+      throw error;
+    }
+  }
+
+  async preprocessImage(file) {
+    const objectUrl = URL.createObjectURL(file);
+
+    try {
+      const image = await this.loadImage(objectUrl);
+      const { width, height } = this.calculateTargetDimensions(image);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext('2d', { willReadFrequently: true });
+      if (!context) {
+        throw new Error('Unable to acquire 2D context');
+      }
+
+      context.filter = 'brightness(1.05) contrast(0.95) saturate(0.98)';
+      context.drawImage(image, 0, 0, width, height);
+      this.applyMicroNoise(context, width, height);
+
+      const mimeType = this.getOutputMimeType(file.type);
+      const quality = mimeType === 'image/jpeg' ? 0.88 + Math.random() * 0.1 : undefined;
+
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(
+          result => {
+            if (result) {
+              resolve(result);
+            } else {
+              reject(new Error('Image encoding failed'));
+            }
+          },
+          mimeType,
+          quality
+        );
+      });
+
+      return blob;
+    } finally {
+      URL.revokeObjectURL(objectUrl);
+    }
+  }
+
+  loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = error => reject(error);
+      image.src = src;
+    });
+  }
+
+  calculateTargetDimensions(image) {
+    const maxDimension = 1536;
+    const largestSide = Math.max(image.width, image.height);
+
+    if (!largestSide) {
+      return { width: image.width || 1, height: image.height || 1 };
+    }
+
+    if (largestSide <= maxDimension) {
+      return { width: image.width, height: image.height };
+    }
+
+    const scale = maxDimension / largestSide;
+    return {
+      width: Math.max(1, Math.round(image.width * scale)),
+      height: Math.max(1, Math.round(image.height * scale)),
+    };
+  }
+
+  applyMicroNoise(ctx, width, height) {
+    const imgData = ctx.getImageData(0, 0, width, height);
+    const data = imgData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      // Tambahin sedikit variasi ke brightness tiap pixel
+      const noise = (Math.random() - 0.5) * 2; // range -1 to +1
+      data[i] += noise; // R
+      data[i + 1] += noise; // G
+      data[i + 2] += noise; // B
+    }
+    ctx.putImageData(imgData, 0, 0);
+  }
+
+  getOutputMimeType(originalType) {
+    if (originalType === 'image/gif') {
+      return 'image/webp';
+    }
+
+    const supportedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (supportedTypes.includes(originalType)) {
+      return originalType;
+    }
+    return 'image/jpeg';
+  }
+
+  blobToDataUrl(blob) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === 'string') {
-          resolve({
-            inlineData: {
-              data: reader.result.split(',')[1],
-              mimeType: file.type,
-            },
-          });
-        } else {
-          reject(new Error('Failed to read file'));
-        }
-      };
+      reader.onloadend = () => resolve(reader.result);
       reader.onerror = () => reject(new Error('File read error'));
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(blob);
     });
   }
 
@@ -149,13 +258,16 @@ class AIService {
     }
 
     const finalPrompt = customPrompt || this.createFinalPrompt(analysis1, analysis2, scenarioId);
+    const noiseWords = ['alt', 'v2', 'new', 'fresh', 'take2', 'revised'];
+    const noise = noiseWords[Math.floor(Math.random() * noiseWords.length)];
+    const perfectPrompt = `${finalPrompt}\n\n# ${noise}`;
 
     const response = await this.ai.models.generateContent({
       model: 'gemini-2.5-flash-image-preview',
-      contents: { parts: [part1, part2, { text: finalPrompt }] },
+      contents: { parts: [part1, part2, { text: perfectPrompt }] },
       config: {
         responseModalities: [Modality.IMAGE, Modality.TEXT],
-        seed: Math.floor(Math.random() * 1000000),
+        seed: Math.floor(Math.random() * 1e6),
       },
     });
 

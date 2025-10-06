@@ -11,7 +11,6 @@ src/
 │   ├── AppFooter.vue   # Application footer
 │   ├── ImageUpload.vue # Image upload component
 │   ├── ScenarioSelector.vue # Scenario selection component
-│   ├── DevModePrompt.vue # Developer mode prompt component
 │   ├── LoadingSpinner.vue # Loading spinner component
 │   ├── ResultModal.vue # Result display modal
 │   └── ToastContainer.vue # Toast notification system
@@ -46,7 +45,6 @@ src/
 - **AppFooter**: Footer with attribution
 - **ImageUpload**: Reusable image upload component with preview
 - **ScenarioSelector**: Radio button interface for choosing image scenarios
-- **DevModePrompt**: Developer mode for custom prompts
 - **LoadingSpinner**: Loading state indicator
 - **ResultModal**: Modal for displaying generated results
 - **ToastContainer**: Notification system

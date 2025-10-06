@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://virtualsnap-rvhrzld.vercel.app/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow unnecessary paths
+Disallow: /api/
+Disallow: /_vercel/
+Disallow: /.vercel/
+
+# Allow specific files
+Allow: /favicon.ico
+Allow: /robots.txt
+Allow: /sitemap.xml

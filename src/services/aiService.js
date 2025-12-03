@@ -263,7 +263,7 @@ class AIService {
     const perfectPrompt = `${finalPrompt}\n\n# ${noise}`;
 
     const response = await this.ai.models.generateContent({
-      model: 'gemini-2.5-flash-image-preview',
+      model: 'gemini-3-pro-image-preview',
       contents: { parts: [part1, part2, { text: perfectPrompt }] },
       config: {
         responseModalities: [Modality.IMAGE, Modality.TEXT],

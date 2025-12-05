@@ -267,7 +267,7 @@ class AIService {
       contents: { parts: [part1, part2, { text: perfectPrompt }] },
       config: {
         responseModalities: [Modality.IMAGE, Modality.TEXT],
-        seed: Math.floor(Math.random() * 1e6),
+        // seed: Math.floor(Math.random() * 1e6),
       },
     });
 
